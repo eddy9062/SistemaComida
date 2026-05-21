@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>AppResetas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="home-content">
+  <div class="page-shell">
+    <header class="home-header">
+      <div>
+        <h1>Gestion de cocina</h1>
+        <p class="muted">Sesion: {{ auth.session?.usuario || 'Usuario' }}</p>
+      </div>
+    </header>
+
+    <section class="cards">
+      <a class="module-card" *ngFor="let card of cards" [routerLink]="card.route">
+        <div class="module-avatar">
+          <ion-icon [name]="card.icon"></ion-icon>
+        </div>
+        <div class="module-text">
+          <h2>{{ card.title }}</h2>
+          <p>{{ card.description }}</p>
+        </div>
+      </a>
+    </section>
+  </div>
+</ion-content>

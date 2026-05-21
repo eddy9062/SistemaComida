@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reporte de compras</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-shell">
+    <form class="filters content-panel" [formGroup]="form" (ngSubmit)="generar()">
+      <div class="form-grid">
+        <ion-item>
+          <ion-label position="stacked">Fecha inicio</ion-label>
+          <ion-input type="date" formControlName="fecha_inicio"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Fecha fin</ion-label>
+          <ion-input type="date" formControlName="fecha_fin"></ion-input>
+        </ion-item>
+      </div>
+      <div class="toolbar-actions">
+        <ion-button type="submit" [disabled]="loading">
+          <ion-icon slot="start" name="analytics-outline"></ion-icon>
+          Generar
+        </ion-button>
+        <ion-button type="button" fill="outline" color="medium" (click)="imprimir()" [disabled]="!rows.length">
+          <ion-icon slot="start" name="print-outline"></ion-icon>
+          Imprimir
+        </ion-button>
+        <ion-button type="button" fill="outline" color="medium" (click)="exportar()" [disabled]="!rows.length">
+          <ion-icon slot="start" name="download-outline"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </form>
+
+    <div class="content-panel report">
+      <app-empty-state *ngIf="generated && !rows.length" title="Sin resultados" message="No hay ingredientes para comprar en el rango."></app-empty-state>
+      <app-empty-state *ngIf="!generated" title="Reporte pendiente" message="Seleccione el rango y genere el reporte."></app-empty-state>
+
+      <div class="table-wrap report-table" *ngIf="rows.length">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ingrediente</th>
+              <th>Unidad compra</th>
+              <th>Cantidad total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td>{{ row.ingrediente }}</td>
+              <td>{{ row.unidad_compra }}</td>
+              <td>{{ row.cantidad_total | number:'1.0-4' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ion-list class="ion-no-padding app-sliding-list report-list" *ngIf="rows.length">
+        <ion-list-header mode="ios">
+          <ion-label class="mt-0">Ingredientes a comprar</ion-label>
+        </ion-list-header>
+        <ion-item *ngFor="let row of rows">
+          <ion-label>
+            <h3>{{ row.ingrediente }}</h3>
+            <p>Unidad: {{ row.unidad_compra }}</p>
+          </ion-label>
+          <ion-label slot="end" class="ion-text-end text-small">{{ row.cantidad_total | number:'1.0-4' }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

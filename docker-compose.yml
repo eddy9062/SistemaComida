@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-comida_db}
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-Atilas123*}
+    expose:
+      - 5432
+    #ports:
+    #  - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - proxy
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: eddy9062@test.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    expose:
+      - 80
+    #ports:
+    #  - "8080:80"
+
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.pgadmin-prefix.stripprefix.prefixes=/pga"
+      - "traefik.http.routers.pgadmin.middlewares=pgadmin-prefix"
+      - "traefik.http.routers.pgadmin.rule=Host(`variedades-jireh.ddns.net`) && PathPrefix(`/pga`)"
+      - "traefik.http.routers.pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.routers.pgadmin.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"  
+
+  comida-server:
+    container_name: comida-server
+    volumes:
+      - /root/docker/volumes/imgcome:/usr/src/app/uploads
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_USER=${DB_USER:-admin}
+      - DB_PASSWORD=${DB_PASSWORD:-Atilas123*}
+      - DB_DATABASE=${DB_DATABASE:-comida_db}
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_SSL=${DB_SSL:-false}
+      - JWT_SECRET=${JWT_SECRET:-secretkeyjireh}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-15d}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - JSON_LIMIT=${JSON_LIMIT:-50mb}
+    build:
+      context: ../ComidaServer
+      dockerfile: Dockerfile
+    image: comida-server:0.0.1
+    expose:
+      - 3000
+    #ports:
+    # - 3000:3000
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.comida-server-prefix.stripprefix.prefixes=/comeserver"
+      - "traefik.http.routers.comida-server.middlewares=comida-server-prefix"
+      - "traefik.http.routers.comida-server.rule=Host(`variedades-jireh.ddns.net`) && PathPrefix(`/comeserver`)"
+      - "traefik.http.routers.comida-server.entrypoints=websecure" 
+      - "traefik.http.routers.comida-server.tls=true"
+      - "traefik.http.routers.comida-server.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.comida-server.loadbalancer.server.port=3000" 
+
+volumes:
+  postgres_data:
+
+networks:
+  proxy:
+    external: true

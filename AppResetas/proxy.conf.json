@@ -1,0 +1,7 @@
+{
+    "/api/*":{
+        "target": "https://redmet.icc.org.gt/ws",
+        "secure": true,
+        "logLevel": "debug"
+    }
+}

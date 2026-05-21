@@ -1,0 +1,81 @@
+.page-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.content-panel {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--app-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table th {
+  color: #344054;
+  font-weight: 700;
+  background: #f4f5f8;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.muted {
+  color: var(--app-muted);
+}
+
+ion-modal.auto-modal {
+  --width: min(720px, calc(100vw - 24px));
+  --height: min(560px, calc(100vh - 32px));
+  --max-height: calc(100vh - 32px);
+  --border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    padding: 10px;
+  }
+
+  .toolbar-actions {
+    width: 100%;
+  }
+
+  .toolbar-actions ion-button {
+    flex: 1 1 auto;
+  }
+}

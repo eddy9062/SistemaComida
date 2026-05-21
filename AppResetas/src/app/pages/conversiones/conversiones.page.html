@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Conversiones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-shell">
+    <ion-searchbar mode="ios" placeholder="Buscar conversion" animated inputmode="text" [debounce]="300" (ionInput)="onSearch($event)"></ion-searchbar>
+
+    <app-empty-state *ngIf="!loading && !items.length" title="Sin conversiones" message="Registre factores entre unidades."></app-empty-state>
+    <app-empty-state *ngIf="!loading && items.length && !filteredItems.length" title="Sin resultados" message="Intente con otro texto de busqueda."></app-empty-state>
+
+    <ion-list class="ion-no-padding app-sliding-list" *ngIf="filteredItems.length">
+      <ion-list-header mode="ios">
+        <ion-label class="mt-0">Listado de conversiones</ion-label>
+      </ion-list-header>
+      <ion-item-sliding *ngFor="let item of filteredItems">
+        <ion-item button detail="false" (click)="edit(item)">
+          <ion-label>
+            <h3>{{ item.unidad_origen_nombre || unitName(item.unidad_origen) }}</h3>
+            <p>Destino: {{ item.unidad_destino_nombre || unitName(item.unidad_destino) }}</p>
+          </ion-label>
+          <ion-label slot="end" class="ion-text-end text-small">{{ item.factor | number:'1.0-6' }}</ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="light" (click)="edit(item)">
+            <ion-icon slot="start" class="slide-edit-icon" name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="light" (click)="remove(item)">
+            <ion-icon slot="start" class="slide-delete-icon" name="trash-sharp"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="create()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ion-modal [isOpen]="modalOpen" [keepContentsMounted]="true" cssClass="auto-modal" (didDismiss)="modalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editing ? 'Editar conversion' : 'Nueva conversion' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modalOpen = false">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <ion-item>
+            <ion-label position="stacked">Unidad origen</ion-label>
+            <ion-select formControlName="unidad_origen" interface="popover">
+              <ion-select-option *ngFor="let unidad of unidades" [value]="unidad.id_unidad">{{ unidad.nombre }} ({{ unidad.abreviatura }})</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Unidad destino</ion-label>
+            <ion-select formControlName="unidad_destino" interface="popover">
+              <ion-select-option *ngFor="let unidad of unidades" [value]="unidad.id_unidad">{{ unidad.nombre }} ({{ unidad.abreviatura }})</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Factor</ion-label>
+            <ion-input type="number" formControlName="factor"></ion-input>
+          </ion-item>
+          <ion-button expand="block" type="submit">Guardar</ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>

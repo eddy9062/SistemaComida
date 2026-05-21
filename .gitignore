@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*/.env
+*/.env.*
+!*/.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Angular / Ionic build output
+dist/
+www/
+*/dist/
+*/www/
+.angular/
+*/.angular/
+coverage/
+*/coverage/
+
+# Capacitor / Android generated output
+**/android/.gradle/
+**/android/.gradle-user/
+**/android/**/build/
+**/android/local.properties
+**/android/app/release/
+**/android/app/debug/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Editor / OS
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+.history/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+* copy.*
+
+# Nested/duplicate repo not required by this project
+ComedorServer/

@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Menu semanal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-shell">
+    <form class="week-filter content-panel" [formGroup]="filterForm" (ngSubmit)="load()">
+      <ion-item>
+        <ion-label position="stacked">Semana</ion-label>
+        <ion-input type="date" formControlName="semana"></ion-input>
+      </ion-item>
+      <ion-button type="submit">
+        <ion-icon slot="start" name="search-outline"></ion-icon>
+        Consultar
+      </ion-button>
+    </form>
+
+    <section class="week-grid">
+      <article class="day-card" *ngFor="let day of days">
+        <header>
+          <div>
+            <h2>{{ day.label }}</h2>
+            <p>{{ day.fecha }}</p>
+          </div>
+          <ion-button fill="clear" size="small" (click)="create(day.fecha)">
+            <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+          </ion-button>
+        </header>
+
+        <app-empty-state *ngIf="!itemsByDay(day.fecha).length" title="Sin recetas" message="Agregue una receta para este dia."></app-empty-state>
+
+        <ion-list lines="full" *ngIf="itemsByDay(day.fecha).length">
+          <ion-item *ngFor="let item of itemsByDay(day.fecha)">
+            <ion-label>
+              <h3>{{ item.receta || recetaName(item.id_receta) }}</h3>
+              <p>{{ item.cantidad_personas }} personas</p>
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button fill="clear" (click)="edit(item)">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" color="danger" (click)="remove(item)">
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-list>
+      </article>
+    </section>
+  </div>
+
+  <ion-modal [isOpen]="modalOpen" cssClass="auto-modal" (didDismiss)="modalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editing ? 'Editar programacion' : 'Agregar receta' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modalOpen = false">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <ion-item>
+            <ion-label position="stacked">Fecha</ion-label>
+            <ion-input type="date" formControlName="fecha"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Receta</ion-label>
+            <ion-select formControlName="id_receta" interface="popover">
+              <ion-select-option *ngFor="let receta of recetas" [value]="receta.id_receta">{{ receta.nombre }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Cantidad personas</ion-label>
+            <ion-input type="number" formControlName="cantidad_personas"></ion-input>
+          </ion-item>
+          <ion-button expand="block" type="submit">Guardar</ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

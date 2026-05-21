@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.side-menu-list ion-item {
+  --min-height: 52px;
+}
+
+.side-menu-list ion-avatar {
+  width: 42px;
+  height: 42px;
+  background: #eef5ff;
+}
+
+.side-menu-list h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.side-menu-list p {
+  margin: 2px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.side-menu-list ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 22px;
+}

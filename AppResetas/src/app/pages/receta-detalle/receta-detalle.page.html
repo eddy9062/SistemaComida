@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/recetas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle de receta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-shell">
+    <section class="recipe-head">
+      <h1>{{ receta?.nombre || 'Receta' }}</h1>
+      <p>{{ receta?.descripcion || 'Detalle de ingredientes' }}</p>
+      <ion-badge color="secondary">{{ receta?.porciones || 1 | number}} porción</ion-badge>
+    </section>
+
+    <form class="content-panel editor" [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-grid">
+        <ion-item>
+          <ion-label position="stacked">Ingrediente</ion-label>
+          <ion-select formControlName="id_ingrediente" interface="popover">
+            <ion-select-option *ngFor="let ingrediente of ingredientes" [value]="ingrediente.id_ingrediente">{{ ingrediente.nombre }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Unidad</ion-label>
+          <ion-select formControlName="id_unidad" interface="popover" [disabled]="!unidadesFiltradas.length">
+            <ion-select-option *ngFor="let unidad of unidadesFiltradas" [value]="unidad.id_unidad">{{ unidad.nombre }} ({{ unidad.abreviatura }})</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Cantidad</ion-label>
+          <ion-input type="number" formControlName="cantidad"></ion-input>
+        </ion-item>
+      </div>
+      <div class="toolbar-actions">
+        <ion-button type="submit">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Guardar
+        </ion-button>
+        <ion-button type="button" fill="outline" color="medium" (click)="cancelEdit()" *ngIf="editing">
+          Cancelar
+        </ion-button>
+      </div>
+    </form>
+
+    <app-empty-state *ngIf="!loading && !detalle.length" title="Sin ingredientes" message="Agregue ingredientes a la receta."></app-empty-state>
+
+    <ion-list class="ion-no-padding app-sliding-list" *ngIf="detalle.length">
+      <ion-list-header mode="ios">
+        <ion-label class="mt-0">Ingredientes de la receta</ion-label>
+      </ion-list-header>
+      <ion-item-sliding *ngFor="let item of detalle">
+        <ion-item button detail="false" (click)="edit(item)">
+          <ion-label>
+            <h3>{{ item.ingrediente || ingredientName(item.id_ingrediente) }}</h3>
+            <p>{{ item.unidad || unitName(item.id_unidad) }}</p>
+          </ion-label>
+          <ion-label slot="end" class="ion-text-end text-small">{{ item.cantidad | number:'1.0-4' }}</ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="light" (click)="edit(item)">
+            <ion-icon slot="start" class="slide-edit-icon" name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="light" (click)="remove(item)">
+            <ion-icon slot="start" class="slide-delete-icon" name="trash-sharp"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+</ion-content>

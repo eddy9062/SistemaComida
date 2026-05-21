@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recetas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-shell">
+    <ion-searchbar mode="ios" placeholder="Buscar receta" animated inputmode="text" [debounce]="300" [(ngModel)]="search"></ion-searchbar>
+
+    <app-empty-state *ngIf="!loading && !items.length" title="Sin recetas" message="Cree recetas y agregue ingredientes."></app-empty-state>
+    <app-empty-state *ngIf="!loading && items.length && !filtered.length" title="Sin resultados" message="Intente con otro texto de busqueda."></app-empty-state>
+
+    <ion-list class="ion-no-padding app-sliding-list" *ngIf="filtered.length">
+      <ion-list-header mode="ios">
+        <ion-label class="mt-0">Listado de recetas</ion-label>
+      </ion-list-header>
+      <ion-item-sliding *ngFor="let item of filtered">
+        <ion-item button detail="true" [routerLink]="['/recetas', item.id_receta, 'detalle']">
+          <ion-thumbnail slot="start" *ngIf="item.imagen_url">
+            <img [src]="item.imagen_url" [alt]="item.nombre">
+          </ion-thumbnail>
+          <ion-label>
+            <h3>{{ item.nombre }}</h3>
+            <p>{{ item.descripcion || 'Sin descripcion' }}</p>
+          </ion-label>
+          <ion-label slot="end" class="ion-text-end text-small">{{ item.porciones | number}} porción</ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="light" (click)="edit(item)">
+            <ion-icon slot="start" class="slide-edit-icon" name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="light" (click)="remove(item)">
+            <ion-icon slot="start" class="slide-delete-icon" name="trash-sharp"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="create()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ion-modal [isOpen]="modalOpen" [keepContentsMounted]="true" cssClass="auto-modal" (didDismiss)="modalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editing ? 'Editar receta' : 'Nueva receta' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modalOpen = false">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input formControlName="nombre"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Descripcion</ion-label>
+            <ion-textarea formControlName="descripcion" rows="3"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Porciones</ion-label>
+            <ion-input type="number" formControlName="porciones"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Imagen URL</ion-label>
+            <ion-input formControlName="imagen_url"></ion-input>
+          </ion-item>
+          <ion-button expand="block" type="submit">Guardar</ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
