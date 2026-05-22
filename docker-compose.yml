@@ -27,6 +27,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: eddy9062@test.com
       PGADMIN_DEFAULT_PASSWORD: admin123
+      SCRIPT_NAME: /pga
     expose:
       - 80
     #ports:
@@ -36,8 +37,7 @@ services:
       - oracle-apex-networks
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.comedor-pgadmin-prefix.stripprefix.prefixes=/pga"
-      - "traefik.http.routers.comedor-pgadmin.middlewares=comedor-pgadmin-prefix"
+      - "traefik.docker.network=oracle-apex-networks"
       - "traefik.http.routers.comedor-pgadmin.rule=Host(`sistema-pv.ddns.net`) && PathPrefix(`/pga`)"
       - "traefik.http.routers.comedor-pgadmin.entrypoints=websecure"
       - "traefik.http.routers.comedor-pgadmin.tls=true"
