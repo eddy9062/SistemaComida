@@ -38,7 +38,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=oracle-apex-networks"
-      - "traefik.http.routers.comedor-pgadmin.rule=Host(`sistema-pv.ddns.net`) && PathPrefix(`/pga`)"
+      - "traefik.http.routers.comedor-pgadmin.rule=Host(`sistema-erp.ddns.net`) && PathPrefix(`/pga`)"
       - "traefik.http.routers.comedor-pgadmin.entrypoints=websecure"
       - "traefik.http.routers.comedor-pgadmin.tls=true"
       - "traefik.http.routers.comedor-pgadmin.tls.certresolver=lets-encrypt"
@@ -78,7 +78,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.middlewares.comedor-api-prefix.stripprefix.prefixes=/comeserver"
       - "traefik.http.routers.comedor-api.middlewares=comedor-api-prefix"
-      - "traefik.http.routers.comedor-api.rule=Host(`sistema-pv.ddns.net`) && PathPrefix(`/comeserver`)"
+      - "traefik.http.routers.comedor-api.rule=Host(`sistema-erp.ddns.net`) && PathPrefix(`/comeserver`)"
       - "traefik.http.routers.comedor-api.entrypoints=websecure"
       - "traefik.http.routers.comedor-api.tls=true"
       - "traefik.http.routers.comedor-api.tls.certresolver=lets-encrypt"

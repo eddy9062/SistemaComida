@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   idapp: 2,
-  apiUrl: 'https://variedades-jireh.ddns.net/comeserver/api/'
+  apiUrl: 'https://sistema-erp.ddns.net/comeserver/api/'
 };
