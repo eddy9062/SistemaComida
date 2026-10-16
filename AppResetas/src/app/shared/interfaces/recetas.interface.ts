@@ -28,7 +28,13 @@ export interface Receta {
   descripcion?: string;
   porciones: number;
   imagen_url?: string;
+  tipo_comida?: TipoComida | null;
+  tiempo_preparacion?: number | null;
+  calorias_estimadas?: number | null;
+  instrucciones?: string | null;
 }
+
+export type TipoComida = 'DESAYUNO' | 'ALMUERZO' | 'CENA';
 
 export interface RecetaIngrediente {
   id_receta: number;
@@ -45,6 +51,9 @@ export interface MenuSemanal {
   id_receta: number;
   cantidad_personas: number;
   receta?: string;
+  imagen_url?: string | null;
+  tipo_comida?: TipoComida | null;
+  tiempo_preparacion?: number | null;
 }
 
 export interface ReporteCompra {

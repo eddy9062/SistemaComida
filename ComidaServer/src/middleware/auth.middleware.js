@@ -20,6 +20,7 @@ export const verifyToken = async (req, res, next) => {
     }
 
     req.user = {
+      cod_empresa: user.cod_empresa,
       id_usuario: user.id_usuario,
       usuario: user.usuario,
       nombre: user.nombre,

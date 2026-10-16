@@ -7,6 +7,8 @@ export const env = {
   port: Number(process.env.PORT || 3001),
   jsonLimit: process.env.JSON_LIMIT || '50mb',
   corsOrigin: process.env.CORS_ORIGIN || '*',
+  uploadsDir: process.env.UPLOADS_DIR || 'uploads',
+  maxImageSizeBytes: Number(process.env.MAX_IMAGE_SIZE_BYTES || 5 * 1024 * 1024),
   jwtSecret: process.env.JWT_SECRET || 'secretkeyjireh',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '15d',
   db: {

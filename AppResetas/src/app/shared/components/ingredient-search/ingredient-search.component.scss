@@ -1,0 +1,4 @@
+.ingredient-search { position: relative; z-index: 2; }
+.ingredient-search ion-icon[slot='start'] { color: var(--ion-color-primary); }
+.matches { position: absolute; z-index: 10; right: 0; left: 0; max-height: 220px; overflow-y: auto; border: 1px solid var(--app-border); border-radius: 0 0 10px 10px; background: var(--ion-background-color, #fff); box-shadow: 0 10px 24px rgb(15 23 42 / 15%); }
+.matches ion-item { --background: var(--ion-background-color, #fff); }

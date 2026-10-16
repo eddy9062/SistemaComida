@@ -9,7 +9,7 @@ export const parseParametros = (paramString = '') => {
       let value = pair.substring(1).trim();
 
       if (type === 'N') {
-        if (value.toLowerCase() === 'null' || value === '') return 0;
+        if (value.toLowerCase() === 'null' || value === '') return null;
         if (!/^\d+(\.\d+)?$/.test(value)) {
           throw new Error(`Parametro numerico invalido: ${pair}`);
         }

@@ -3,10 +3,31 @@ import { parseParametros } from '../utils/parse-parametros.js';
 
 const getIdApp = (idapp) => Number(idapp || 2);
 
-export const executeConfiguredSql = async ({ idapp, codigoSQL, parametro }) => {
+const validationError = (message) => Object.assign(new Error(message), { statusCode: 400 });
+
+const validateRecipeParameters = (codigoSQL, params) => {
+  const code = Number(codigoSQL);
+  if (code === 141) {
+    if (params.length !== 4 || !Number.isFinite(params[3]) || params[3] <= 0) {
+      throw validationError('La cantidad del ingrediente debe ser mayor que cero.');
+    }
+    return;
+  }
+  if (code !== 131 && code !== 132) return;
+
+  const offset = code === 132 ? 1 : 0;
+  const [nombre, , tipoComida, porciones, tiempoPreparacion, calorias] = params.slice(offset);
+  if (typeof nombre !== 'string' || !nombre.trim()) throw validationError('El nombre de la receta es obligatorio.');
+  if (!['DESAYUNO', 'ALMUERZO', 'CENA'].includes(tipoComida)) throw validationError('El tipo de comida no es válido.');
+  if (!Number.isFinite(porciones) || porciones <= 0) throw validationError('Las porciones deben ser mayores que cero.');
+  if (tiempoPreparacion !== null && (!Number.isFinite(tiempoPreparacion) || tiempoPreparacion < 0)) throw validationError('El tiempo de preparación no puede ser negativo.');
+  if (calorias !== null && (!Number.isFinite(calorias) || calorias < 0)) throw validationError('Las calorías estimadas no pueden ser negativas.');
+};
+
+export const executeConfiguredSql = async ({ idapp, codigoSQL, parametro, codEmpresa }) => {
   const { rows } = await query(
-    'SELECT sqlapi FROM public.tbl_api_sql WHERE idapp = $1 AND codigo = $2',
-    [getIdApp(idapp), String(codigoSQL)]
+    'SELECT sqlapi FROM public.tbl_api_sql WHERE cod_empresa = $1 AND idapp = $2 AND codigo = $3',
+    [Number(codEmpresa), getIdApp(idapp), String(codigoSQL)]
   );
 
   console.log(getIdApp(idapp))
@@ -19,15 +40,16 @@ console.log(rows)
   }
 
   const params = parseParametros(parametro);
+  validateRecipeParameters(codigoSQL, params);
   const result = await query(rows[0].sqlapi, params);
   return result.rows;
 };
 
-export const executeConfiguredSqlMulti = async ({ idapp, codigoSQL, encabezado }) => {
+export const executeConfiguredSqlMulti = async ({ idapp, codigoSQL, encabezado, codEmpresa }) => {
   return withTransaction(async (client) => {
     const { rows } = await client.query(
-      'SELECT sqlapi, sqlapicomb FROM public.tbl_api_sql WHERE idapp = $1 AND codigo = $2',
-      [getIdApp(idapp), String(codigoSQL)]
+      'SELECT sqlapi, sqlapicomb FROM public.tbl_api_sql WHERE cod_empresa = $1 AND idapp = $2 AND codigo = $3',
+      [Number(codEmpresa), getIdApp(idapp), String(codigoSQL)]
     );
 
     if (rows.length === 0) {
@@ -58,11 +80,11 @@ export const executeConfiguredSqlMulti = async ({ idapp, codigoSQL, encabezado }
   });
 };
 
-export const executeConfiguredSqlMultiSetting = async ({ idapp, codigoSQL, encabezado }) => {
+export const executeConfiguredSqlMultiSetting = async ({ idapp, codigoSQL, encabezado, codEmpresa }) => {
   return withTransaction(async (client) => {
     const { rows } = await client.query(
-      'SELECT sqlapi, sqlapicomb FROM public.tbl_api_sql WHERE idapp = $1 AND codigo = $2',
-      [getIdApp(idapp), String(codigoSQL)]
+      'SELECT sqlapi, sqlapicomb FROM public.tbl_api_sql WHERE cod_empresa = $1 AND idapp = $2 AND codigo = $3',
+      [Number(codEmpresa), getIdApp(idapp), String(codigoSQL)]
     );
 
     if (rows.length === 0) {

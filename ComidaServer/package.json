@@ -19,7 +19,9 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "pg": "^8.13.1"
+    "multer": "^2.4.0",
+    "pg": "^8.13.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

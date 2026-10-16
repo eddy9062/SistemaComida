@@ -4,6 +4,7 @@ import { dynamicSqlRouter } from './dynamicSqlRouter.js';
 import { movimientosRouter } from './movimientos.routes.js';
 import { rolesRouter } from './roles.routes.js';
 import { usersRouter } from './users.routes.js';
+import { recetasRouter } from './recetas.routes.js';
 
 export const apiRouter = Router();
 
@@ -12,3 +13,4 @@ apiRouter.use(dynamicSqlRouter);
 apiRouter.use(usersRouter);
 apiRouter.use(rolesRouter);
 apiRouter.use(movimientosRouter);
+apiRouter.use(recetasRouter);

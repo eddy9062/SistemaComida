@@ -30,6 +30,16 @@ export class ApiService {
       .pipe(catchError((error) => throwError(() => this.toMessage(error))));
   }
 
+  uploadRecipeImage(idReceta: number, image: File): Observable<{ imagen_url: string }> {
+    const body = new FormData();
+    body.append('imagen', image);
+    return this.http.post<{ imagen_url: string }>(`${this.url}recetas/${idReceta}/imagen`, body).pipe(catchError((error) => throwError(() => this.toMessage(error))));
+  }
+
+  deleteRecipeImage(idReceta: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}recetas/${idReceta}/imagen`).pipe(catchError((error) => throwError(() => this.toMessage(error))));
+  }
+
   private toMessage(error: unknown): Error {
     const err = error as { error?: { message?: string }, message?: string };
     return new Error(err.error?.message ?? err.message ?? 'No fue posible completar la operacion');

@@ -1,16 +1,16 @@
 <ion-content class="login-content">
   <main class="login-shell">
-    <section class="brand">
-      <h1>AppResetas</h1>
-      <p>Gestion de recetas, menu semanal y compras.</p>
+    <section class="brand" aria-label="AppResetas">
+      <ion-icon class="brand-logo brand-logo-fallback" name="restaurant-outline" aria-label="AppResetas"></ion-icon>
+      <div><p class="eyebrow">SISTEMA COMIDA</p><h1>AppResetas</h1><p>Gestión de recetas, menú semanal y compras.</p></div>
     </section>
 
-    <form class="login-card" [formGroup]="form" (ngSubmit)="ingresar()">
-      <h2>Ingresar</h2>
+    <form class="login-card" [formGroup]="form" (ngSubmit)="ingresar()" autocomplete="on">
+      <p class="eyebrow">ACCESO SEGURO</p><h2>Bienvenido</h2><p class="login-intro">Ingresa tus credenciales para continuar.</p>
 
       <ion-item>
-        <ion-label position="stacked">Usuario</ion-label>
-        <ion-input formControlName="usuario" autocomplete="username"></ion-input>
+        <ion-icon name="person-outline" slot="start" aria-hidden="true"></ion-icon><ion-label position="stacked">Usuario</ion-label>
+        <ion-input name="username" formControlName="usuario" autocomplete="username" inputmode="text"></ion-input>
       </ion-item>
 
       <ion-note color="danger" *ngIf="form.controls.usuario.touched && form.controls.usuario.invalid">
@@ -18,17 +18,20 @@
       </ion-note>
 
       <ion-item>
-        <ion-label position="stacked">Contrasena</ion-label>
-        <ion-input type="password" formControlName="password" autocomplete="current-password"></ion-input>
+        <ion-icon name="lock-closed-outline" slot="start" aria-hidden="true"></ion-icon><ion-label position="stacked">Contraseña</ion-label>
+        <ion-input name="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="current-password"></ion-input>
+        <ion-button type="button" fill="clear" slot="end" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" (click)="togglePassword()"><ion-icon slot="icon-only" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon></ion-button>
       </ion-item>
 
       <ion-note color="danger" *ngIf="form.controls.password.touched && form.controls.password.invalid">
-        Contrasena obligatoria.
+        Contraseña obligatoria.
       </ion-note>
+
+      <ion-item class="remember-item" lines="none"><ion-checkbox slot="start" formControlName="remember" (ionChange)="updateRememberPreference()"></ion-checkbox><ion-label>Recordarme</ion-label></ion-item>
 
       <ion-button type="submit" expand="block" [disabled]="loading">
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-        <span *ngIf="!loading">Ingresar</span>
+        <ion-icon *ngIf="!loading" name="log-in-outline" slot="start"></ion-icon><span *ngIf="!loading">Ingresar</span>
       </ion-button>
     </form>
   </main>

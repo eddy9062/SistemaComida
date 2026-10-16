@@ -29,4 +29,5 @@ export class AppComponent {
   ];
 
   constructor(public readonly auth: AuthService) {}
+
 }

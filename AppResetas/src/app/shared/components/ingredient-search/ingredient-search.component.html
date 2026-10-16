@@ -1,0 +1,12 @@
+<div class="ingredient-search">
+  <ion-item>
+    <ion-icon slot="start" name="nutrition-outline" aria-hidden="true"></ion-icon>
+    <ion-label position="stacked">Ingrediente</ion-label>
+    <ion-input #searchInput [(ngModel)]="query" (ngModelChange)="onQueryChange()" [ngModelOptions]="{ standalone: true }" placeholder="Buscar ingrediente" autocomplete="off"></ion-input>
+    <ion-icon *ngIf="selectedId !== null && !dropdownOpen" slot="end" name="checkmark-circle" color="success" aria-label="Ingrediente seleccionado"></ion-icon>
+    <ion-button *ngIf="query || selectedId !== null" slot="end" type="button" fill="clear" color="medium" aria-label="Limpiar selección" title="Limpiar selección" (click)="clear()"><ion-icon slot="icon-only" name="close-circle-outline"></ion-icon></ion-button>
+  </ion-item>
+  <ion-list *ngIf="dropdownOpen && matches.length" class="matches" lines="none">
+    <ion-item button type="button" *ngFor="let ingrediente of matches" (click)="select(ingrediente)"><ion-label>{{ ingrediente.nombre }}</ion-label></ion-item>
+  </ion-list>
+</div>

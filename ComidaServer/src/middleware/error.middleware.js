@@ -3,10 +3,10 @@ export const notFoundHandler = (req, res) => {
 };
 
 export const errorHandler = (error, req, res, next) => {
-  const statusCode = error.statusCode || 500;
+  const statusCode = error.code === 'LIMIT_FILE_SIZE' ? 413 : (error.statusCode || 500);
 
   res.status(statusCode).json({
-    message: statusCode === 500 ? 'error en el Servidor' : error.message,
+    message: statusCode === 413 ? 'La imagen supera el tamaño máximo permitido.' : (statusCode === 500 ? 'error en el Servidor' : error.message),
     detail: process.env.NODE_ENV === 'production' ? undefined : error.message
   });
 };

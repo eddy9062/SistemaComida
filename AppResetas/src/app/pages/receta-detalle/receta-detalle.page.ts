@@ -8,13 +8,14 @@ import { SQL_CODES } from '../../core/constants/sql-codes';
 import { ApiService } from '../../core/services/api.service';
 import { UiService } from '../../core/services/ui.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { IngredientSearchComponent } from '../../shared/components/ingredient-search/ingredient-search.component';
 import { ApiParamType } from '../../shared/interfaces/dynamic-api.interface';
 import { Ingrediente, Receta, RecetaIngrediente, UnidadMedida } from '../../shared/interfaces/recetas.interface';
 
 @Component({
   selector: 'app-receta-detalle',
   standalone: true,
-  imports: [CommonModule, IonicModule, ReactiveFormsModule, EmptyStateComponent],
+  imports: [CommonModule, IonicModule, ReactiveFormsModule, EmptyStateComponent, IngredientSearchComponent],
   templateUrl: './receta-detalle.page.html',
   styleUrls: ['./receta-detalle.page.scss']
 })
@@ -93,9 +94,7 @@ export class RecetaDetallePage implements OnInit {
     const idIngrediente = this.form.controls.id_ingrediente.value;
     const ingrediente = this.ingredientes.find((item) => Number(item.id_ingrediente) === Number(idIngrediente));
 
-    if (!ingrediente) {
-      return [];
-    }
+    if (!ingrediente) return [];
 
     const ids = new Set([Number(ingrediente.unidad_compra), Number(ingrediente.unidad_consumo)]);
     return this.unidades.filter((unidad) => ids.has(Number(unidad.id_unidad)));
@@ -165,6 +164,9 @@ export class RecetaDetallePage implements OnInit {
   }
 
   private syncSelectedUnit(): void {
+    if (this.form.controls.id_ingrediente.value === null) {
+      return;
+    }
     const selectedUnit = this.form.controls.id_unidad.value;
     const allowed = this.unidadesFiltradas.some((unidad) => Number(unidad.id_unidad) === Number(selectedUnit));
 

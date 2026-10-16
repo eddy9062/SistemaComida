@@ -1,3 +1,1 @@
-ion-button[type="submit"] {
-  margin-top: 18px;
-}
+.catalog-sticky { position: sticky; top: 0; z-index: 5; padding: 6px 0; background: var(--ion-background-color, #fff); }.catalog-sticky ion-searchbar { padding-inline: 0; }.desktop-actions { margin-left: 8px; }.desktop-actions ion-button { --padding-start: 7px; --padding-end: 7px; min-width: 36px; } ion-button[type="submit"] { margin-top: 18px; } @media (max-width: 767px) { .desktop-actions { display: none; } }

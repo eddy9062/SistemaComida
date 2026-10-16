@@ -10,7 +10,12 @@
   width: 42px;
   height: 42px;
   background: #eef5ff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
 }
+
+.side-menu-list ion-avatar ion-icon { color: var(--ion-color-primary); font-size: 25px; }
 
 .side-menu-list h3 {
   margin: 0;

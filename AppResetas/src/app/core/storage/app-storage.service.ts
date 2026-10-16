@@ -2,12 +2,31 @@ import { Injectable } from '@angular/core';
 import { AuthSession } from '../../shared/interfaces/auth-session.interface';
 
 const SESSION_KEY = 'appcomida.session';
+const REMEMBERED_USERNAME_KEY = 'appcomida.remembered-username';
 
 @Injectable({ providedIn: 'root' })
 export class AppStorageService {
   get session(): AuthSession | null {
     const value = localStorage.getItem(SESSION_KEY);
-    return value ? JSON.parse(value) as AuthSession : null;
+    try {
+      return value ? JSON.parse(value) as AuthSession : null;
+    } catch {
+      this.clear();
+      return null;
+    }
+  }
+
+  get rememberedUsername(): string {
+    return localStorage.getItem(REMEMBERED_USERNAME_KEY) ?? '';
+  }
+
+  setRememberedUsername(usuario: string): void {
+    const value = usuario.trim();
+    if (value) {
+      localStorage.setItem(REMEMBERED_USERNAME_KEY, value);
+    } else {
+      localStorage.removeItem(REMEMBERED_USERNAME_KEY);
+    }
   }
 
   setSession(session: AuthSession): void {

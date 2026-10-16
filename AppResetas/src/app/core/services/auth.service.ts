@@ -16,6 +16,10 @@ export class AuthService {
     private readonly storage: AppStorageService
   ) {
     this.currentSession = this.storage.session;
+    if (!this.isAuthenticated()) {
+      this.currentSession = null;
+      this.storage.clear();
+    }
   }
 
   get session(): AuthSession | null {
@@ -23,7 +27,11 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.currentSession?.token && !this.isTokenExpired();
+    const token = this.currentSession?.token;
+    if (!token || !this.decodeJwt(token) || this.isTokenExpired()) {
+      return false;
+    }
+    return true;
   }
 
   login(credentials: LoginRequest): Observable<AuthSession> {
@@ -47,8 +55,8 @@ export class AuthService {
   }
 
   isTokenExpired(): boolean {
-    const expiresAt = this.currentSession?.expiresAt;
-    return !!expiresAt && Date.now() >= expiresAt;
+    const expiresAt = this.currentSession?.expiresAt ?? this.tokenExpiration(this.currentSession?.token);
+    return !expiresAt || Date.now() >= expiresAt;
   }
 
   private normalizeSession(response: Record<string, unknown>): AuthSession {
@@ -75,6 +83,11 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  private tokenExpiration(token?: string): number | undefined {
+    const expiration = this.decodeJwt(token ?? '')?.['exp'];
+    return typeof expiration === 'number' ? expiration * 1000 : undefined;
   }
 
   private asRecord(value: unknown): Record<string, unknown> | null {

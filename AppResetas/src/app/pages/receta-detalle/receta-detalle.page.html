@@ -17,12 +17,7 @@
 
     <form class="content-panel editor" [formGroup]="form" (ngSubmit)="save()">
       <div class="form-grid">
-        <ion-item>
-          <ion-label position="stacked">Ingrediente</ion-label>
-          <ion-select formControlName="id_ingrediente" interface="popover">
-            <ion-select-option *ngFor="let ingrediente of ingredientes" [value]="ingrediente.id_ingrediente">{{ ingrediente.nombre }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+        <app-ingredient-search [ingredientes]="ingredientes" [selectedId]="form.controls.id_ingrediente.value" (selectedIdChange)="form.controls.id_ingrediente.setValue($event)"></app-ingredient-search>
         <ion-item>
           <ion-label position="stacked">Unidad</ion-label>
           <ion-select formControlName="id_unidad" interface="popover" [disabled]="!unidadesFiltradas.length">
